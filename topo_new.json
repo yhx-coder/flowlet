@@ -1,0 +1,940 @@
+{
+    "multigraph": false,
+    "nodes":
+    [
+        {
+            "id": "s1",
+            "grpc_addr": "192.168.199.210:50091",
+            "thrift_addr": "192.168.199.210:9090",
+            "device_id": 1,
+            "cpu-port": "255",
+            "ports":
+            {
+                "1":
+                {
+                    "name": "enp59s0f1",
+                    "number": "1",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "e4:3d:1a:ff:6b:95"
+                },
+                "2":
+                {
+                    "name": "eno2",
+                    "number": "2",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "90:8d:6e:c2:60:79"
+                },
+                "3":
+                {
+                    "name": "eno3",
+                    "number": "3",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "90:8d:6e:c2:60:7a"
+                },
+                "4":
+                {
+                    "name": "eno4",
+                    "number": "4",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "90:8d:6e:c2:60:7b"
+                },
+                "5":
+                {
+                    "name": "enp59s0f2",
+                    "number": "5",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "e4:3d:1a:ff:6b:96"
+                },
+                "6":
+                {
+                    "name": "enp59s0f3",
+                    "number": "6",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "e4:3d:1a:ff:6b:97"
+                }
+            }
+        },
+        {
+            "id": "s2",
+            "grpc_addr": "192.168.199.190:50091",
+            "thrift_addr": "192.168.199.190:9090",
+            "device_id": 2,
+            "cpu-port": "255",
+            "ports":
+            {
+                "1":
+                {
+                    "name": "eno1",
+                    "number": "1",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "34:73:5a:9c:be:28"
+                },
+                "2":
+                {
+                    "name": "eno2",
+                    "number": "2",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "34:73:5a:9c:be:29"
+                },
+                "3":
+                {
+                    "name": "enp179s0f0",
+                    "number": "3",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "00:0a:f7:2a:9f:38"
+                },
+                "4":
+                {
+                    "name": "enp179s0f2",
+                    "number": "4",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "00:0a:f7:2a:9f:3a"
+                }
+            }
+        },
+        {
+            "id": "s3",
+            "grpc_addr": "192.168.199.202:50091",
+            "thrift_addr": "192.168.199.202:9090",
+            "device_id": 3,
+            "cpu-port": "255",
+            "ports":
+            {
+                "1":
+                {
+                    "name": "eno12399",
+                    "number": "1",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "84:16:0c:ab:cb:a2"
+                },
+                "2":
+                {
+                    "name": "eno12409",
+                    "number": "2",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "84:16:0c:ab:cb:a3"
+                },
+                "3":
+                {
+                    "name": "eno12419",
+                    "number": "3",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "84:16:0c:ab:cb:a4"
+                },
+                "4":
+                {
+                    "name": "eno8403",
+                    "number": "4",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "ec:2a:72:22:f0:97"
+                }
+            }
+        },
+        {
+            "id": "s4",
+            "grpc_addr": "192.168.199.200:50091",
+            "thrift_addr": "192.168.199.200:9090",
+            "device_id": 4,
+            "cpu-port": "255",
+            "ports":
+            {
+                "1":
+                {
+                    "name": "eno4",
+                    "number": "1",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "8c:2a:8e:1a:d8:48"
+                },
+                "2":
+                {
+                    "name": "veth0",
+                    "number": "2",
+                    "speed": "1000",
+                    "ip": "10.0.1.1/24",
+                    "mac": "b2:b1:ac:f5:21:23"
+                }
+            }
+        },
+        {
+            "id": "s5",
+            "grpc_addr": "192.168.199.194:50091",
+            "thrift_addr": "192.168.199.194:9090",
+            "device_id": 5,
+            "cpu-port": "255",
+            "ports":
+            {
+                "1":
+                {
+                    "name": "eno4",
+                    "number": "1",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "f4:6b:8c:2b:36:cc"
+                },
+                "2":
+                {
+                    "name": "weave",
+                    "number": "2",
+                    "speed": "1000",
+                    "ip": "10.39.0.0",
+                    "mac": "c6:d0:c6:76:6f:74"
+                }
+            }
+        },
+        {
+            "id": "s6",
+            "grpc_addr": "192.168.199.188:50091",
+            "thrift_addr": "192.168.199.188:9090",
+            "device_id": 6,
+            "cpu-port": "255",
+            "ports":
+            {
+                "1":
+                {
+                    "name": "eno1",
+                    "number": "1",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "34:73:5a:a0:57:68"
+                },
+                "2":
+                {
+                    "name": "eno2",
+                    "number": "2",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "34:73:5a:a0:57:69"
+                },
+                "3":
+                {
+                    "name": "eno3",
+                    "number": "3",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "34:73:5a:a0:57:6a"
+                },
+                "4":
+                {
+                    "name": "eno4",
+                    "number": "4",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "34:73:5a:a0:57:6b"
+                },
+                "5":
+                {
+                    "name": "enp179s0f0",
+                    "number": "5",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "00:0a:f7:2a:a2:cc"
+                },
+                "6":
+                {
+                    "name": "enp179s0f1",
+                    "number": "6",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "00:0a:f7:2a:a2:cd"
+                }
+            }
+        },
+        {
+            "id": "s7",
+            "grpc_addr": "192.168.199.186:50091",
+            "thrift_addr": "192.168.199.186:9090",
+            "device_id": 7,
+            "cpu-port": "255",
+            "ports":
+            {
+                "1":
+                {
+                    "name": "eno1",
+                    "number": "1",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "34:73:5a:a0:a0:98"
+                },
+                "2":
+                {
+                    "name": "enp179s0f0",
+                    "number": "2",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "00:0a:f7:4f:3e:a0"
+                },
+                "3":
+                {
+                    "name": "eno3",
+                    "number": "3",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "34:73:5a:a0:a0:9a"
+                },
+                "4":
+                {
+                    "name": "eno4",
+                    "number": "4",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "34:73:5a:a0:a0:9b"
+                }
+            }
+        },
+        {
+            "id": "s8",
+            "grpc_addr": "192.168.199.184:50091",
+            "thrift_addr": "192.168.199.184:9090",
+            "device_id": 8,
+            "cpu-port": "255",
+            "ports":
+            {
+                "1":
+                {
+                    "name": "enp179s0f1",
+                    "number": "1",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "00:0a:f7:2a:a2:ed"
+                },
+                "2":
+                {
+                    "name": "eno2",
+                    "number": "2",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "34:73:5a:a4:04:95"
+                },
+                "3":
+                {
+                    "name": "eno3",
+                    "number": "3",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "34:73:5a:a4:04:96"
+                },
+                "4":
+                {
+                    "name": "enp179s0f2",
+                    "number": "4",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "00:0a:f7:2a:a2:ee"
+                },
+                "5":
+                {
+                    "name": "enp179s0f0",
+                    "number": "5",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "00:0a:f7:2a:a2:ec"
+                }
+            }
+        },
+        {
+            "id": "s9",
+            "grpc_addr": "192.168.199.192:50091",
+            "thrift_addr": "192.168.199.192:9090",
+            "device_id": 9,
+            "cpu-port": "255",
+            "ports":
+            {
+                "1":
+                {
+                    "name": "eno4",
+                    "number": "1",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "8c:2a:8e:1a:57:01"
+                },
+                "2":
+                {
+                    "name": "veth0",
+                    "number": "2",
+                    "speed": "1000",
+                    "ip": "10.0.3.1/24",
+                    "mac": "2a:2c:65:7e:10:ab"
+                }
+            }
+        },
+        {
+            "id": "s10",
+            "grpc_addr": "192.168.199.206:50091",
+            "thrift_addr": "192.168.199.206:9090",
+            "device_id": 10,
+            "cpu-port": "255",
+            "ports":
+            {
+                "1":
+                {
+                    "name": "eno3",
+                    "number": "1",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "90:8d:6e:c2:60:b2"
+                },
+                "2":
+                {
+                    "name": "eno2",
+                    "number": "2",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "90:8d:6e:c2:60:b1"
+                },
+                "3":
+                {
+                    "name": "weave",
+                    "number": "3",
+                    "speed": "1000",
+                    "ip": "10.43.0.0",
+                    "mac": "3e:1b:10:a4:91:ad"
+                }
+            }
+        },
+        {
+            "id": "s11",
+            "grpc_addr": "192.168.199.196:50091",
+            "thrift_addr": "192.168.199.196:9090",
+            "device_id": 11,
+            "cpu-port": "255",
+            "ports":
+            {
+                "1":
+                {
+                    "name": "enp179s0f1",
+                    "number": "1",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "00:0a:f7:2a:a2:95"
+                },
+                "2":
+                {
+                    "name": "eno2",
+                    "number": "2",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "34:73:5a:a0:5f:95"
+                },
+                "3":
+                {
+                    "name": "eno3",
+                    "number": "3",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "34:73:5a:a0:5f:96"
+                },
+                "4":
+                {
+                    "name": "eno4",
+                    "number": "4",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "34:73:5a:a0:5f:97"
+                },
+                "5":
+                {
+                    "name": "enp179s0f2",
+                    "number": "5",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "00:0a:f7:2a:a2:96"
+                },
+                "6":
+                {
+                    "name": "enp179s0f3",
+                    "number": "6",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "00:0a:f7:2a:a2:97"
+                }
+            }
+        },
+        {
+            "id": "s12",
+            "grpc_addr": "192.168.199.198:50091",
+            "thrift_addr": "192.168.199.198:9090",
+            "device_id": 12,
+            "cpu-port": "255",
+            "ports":
+            {
+                "1":
+                {
+                    "name": "enp177s0f0",
+                    "number": "1",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "e4:3d:1a:fb:6b:5c"
+                },
+                "2":
+                {
+                    "name": "eno12419",
+                    "number": "2",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "e4:3d:1a:61:d3:6a"
+                },
+                "3":
+                {
+                    "name": "eno12429",
+                    "number": "3",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "e4:3d:1a:61:d3:6b"
+                },
+                "4":
+                {
+                    "name": "eno8403",
+                    "number": "4",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "b0:7b:25:e9:a2:37"
+                },
+                "5":
+                {
+                    "name": "eno12409",
+                    "number": "5",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "e4:3d:1a:61:d3:69"
+                }
+            }
+        },
+        {
+            "id": "s13",
+            "grpc_addr": "192.168.199.182:50091",
+            "thrift_addr": "192.168.199.182:9090",
+            "device_id": 13,
+            "cpu-port": "255",
+            "ports":
+            {
+                "1":
+                {
+                    "name": "enp179s0f2",
+                    "number": "1",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "00:0a:f7:2a:a1:1a"
+                },
+                "2":
+                {
+                    "name": "eno2",
+                    "number": "2",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "34:73:5a:9c:be:75"
+                },
+                "3":
+                {
+                    "name": "eno3",
+                    "number": "3",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "34:73:5a:9c:be:76"
+                },
+                "4":
+                {
+                    "name": "eno4",
+                    "number": "4",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "34:73:5a:9c:be:77"
+                },
+                "5":
+                {
+                    "name": "enp179s0f1",
+                    "number": "5",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "00:0a:f7:2a:a1:19"
+                }
+            }
+        },
+        {
+            "id": "s14",
+            "grpc_addr": "192.168.199.208:50091",
+            "thrift_addr": "192.168.199.208:9090",
+            "device_id": 14,
+            "cpu-port": "255",
+            "ports":
+            {
+                "1":
+                {
+                    "name": "eno4",
+                    "number": "1",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "90:8d:6e:c2:2f:f3"
+                },
+                "2":
+                {
+                    "name": "eno2",
+                    "number": "2",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "90:8d:6e:c2:2f:f1"
+                },
+                "3":
+                {
+                    "name": "veth0",
+                    "number": "3",
+                    "speed": "1000",
+                    "ip": "10.0.5.1/24",
+                    "mac": "82:1a:05:35:df:12"
+                }
+            }
+        },
+        {
+            "id": "s15",
+            "grpc_addr": "192.168.199.204:50091",
+            "thrift_addr": "192.168.199.204:9090",
+            "device_id": 15,
+            "cpu-port": "255",
+            "ports":
+            {
+                "1":
+                {
+                    "name": "eno12399",
+                    "number": "1",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "84:16:0c:ab:c6:8c"
+                },
+                "2":
+                {
+                    "name": "eno12419",
+                    "number": "2",
+                    "speed": "1000",
+                    "ip": "",
+                    "mac": "84:16:0c:ab:c6:8e"
+                },
+                "3":
+                {
+                    "name": "veth0",
+                    "number": "3",
+                    "speed": "1000",
+                    "ip": "10.0.6.1/24",
+                    "mac": "3a:1b:48:f3:af:65"
+                }
+            }
+        },
+        {
+        	"id":"h1",
+        	"ip":"10.0.1.2/24",
+        	"mac":"00:00:00:00:01:01",
+        	"port":"veth1"
+        },
+        {
+        	"id":"h2",
+        	"ip":"10.39.0.1/12",
+        	"mac":"fa:46:20:0c:23:22",
+        	"port":"eth1"
+        },
+        {
+        	"id":"h3",
+        	"ip":"10.0.3.2/24",
+        	"mac":"6e:3a:35:55:91:5f",
+        	"port":"veth1"
+        },
+        {
+        	"id":"h4",
+        	"ip":"10.43.0.4/12",
+        	"mac":"f6:c4:34:38:6c:f1",
+        	"port":"eth1"
+        },
+        {
+        	"id":"h5",
+        	"ip":"10.0.5.2/24",
+        	"mac":"26:b5:71:fe:4b:af",
+        	"port":"veth1"
+        },
+        {
+        	"id":"h6",
+        	"ip":"10.0.6.2/24",
+        	"mac":"aa:fa:91:1d:79:03",
+        	"port":"veth1"
+        }
+    ],
+    "links":
+    [
+        {
+            "source": "s6",
+            "target": "s7",
+            "source_device":"s6",
+            "target_device":"s7",
+            "source-inf": "eno1",
+            "target-inf": "eno1"
+        },
+        {
+            "source": "s6",
+            "target": "s8",
+            "source_device":"s6",
+            "target_device":"s8",
+            "source-inf": "eno3",
+            "target-inf": "eno3"
+        },
+        {
+            "source": "s8",
+            "target": "s9",
+            "source_device":"s8",
+            "target_device":"s9",
+            "source-inf": "enp179s0f2",
+            "target-inf": "eno4"
+        },
+        {
+            "source": "s12",
+            "target": "s15",
+            "source_device":"s12",
+            "target_device":"s15",
+            "source-inf": "eno12419",
+            "target-inf": "eno12399"
+        },
+        {
+            "source": "s2",
+            "target": "s4",
+            "source_device":"s2",
+            "target_device":"s4",
+            "source-inf": "enp179s0f2",
+            "target-inf": "eno4"
+        },
+        {
+            "source": "s6",
+            "target": "s2",
+            "source_device":"s6",
+            "target_device":"s2",
+            "source-inf": "enp179s0f1",
+            "target-inf": "enp179s0f0"
+        },
+        {
+            "source": "s6",
+            "target": "s12",
+            "source_device":"s6",
+            "target_device":"s12",
+            "source-inf": "enp179s0f0",
+            "target-inf": "eno12429"
+        },
+        {
+            "source": "s11",
+            "target": "s2",
+            "source_device":"s11",
+            "target_device":"s2",
+            "source-inf": "enp179s0f3",
+            "target-inf": "eno1"
+        },
+        {
+            "source": "s11",
+            "target": "s7",
+            "source_device":"s11",
+            "target_device":"s7",
+            "source-inf": "enp179s0f2",
+            "target-inf": "enp179s0f0"
+        },
+        {
+            "source": "s11",
+            "target": "s8",
+            "source_device":"s11",
+            "target_device":"s8",
+            "source-inf": "enp179s0f1",
+            "target-inf": "enp179s0f1"
+        },
+        {
+            "source": "s11",
+            "target": "s12",
+            "source_device":"s11",
+            "target_device":"s12",
+            "source-inf": "eno2",
+            "target-inf": "eno8403"
+        },
+        {
+            "source": "s1",
+            "target": "s2",
+            "source_device":"s1",
+            "target_device":"s2",
+            "source-inf": "eno2",
+            "target-inf": "eno2"
+        },
+        {
+            "source": "s1",
+            "target": "s3",
+            "source_device":"s1",
+            "target_device":"s3",
+            "source-inf": "eno4",
+            "target-inf": "eno12399"
+        },
+        {
+            "source": "s1",
+            "target": "s7",
+            "source_device":"s1",
+            "target_device":"s7",
+            "source-inf": "eno3",
+            "target-inf": "eno4"
+        },
+        {
+            "source": "s1",
+            "target": "s8",
+            "source_device":"s1",
+            "target_device":"s8",
+            "source-inf": "enp59s0f3",
+            "target-inf": "eno2"
+        },
+        {
+            "source": "s1",
+            "target": "s12",
+            "source_device":"s1",
+            "target_device":"s12",
+            "source-inf": "enp59s0f2",
+            "target-inf": "eno12409"
+        },
+        {
+            "source": "s1",
+            "target": "s13",
+            "source_device":"s1",
+            "target_device":"s13",
+            "source-inf": "enp59s0f1",
+            "target-inf": "enp179s0f2"
+        },
+        {
+            "source": "s3",
+            "target": "s6",
+            "source_device":"s3",
+            "target_device":"s6",
+            "source-inf": "eno12409",
+            "target-inf": "eno4"
+        },
+        {
+            "source": "s3",
+            "target": "s11",
+            "source_device":"s3",
+            "target_device":"s11",
+            "source-inf": "eno12419",
+            "target-inf": "eno3"
+        },
+        {
+            "source": "s3",
+            "target": "s5",
+            "source_device":"s3",
+            "target_device":"s5",
+            "source-inf": "eno8403",
+            "target-inf": "eno4"
+        },
+        {
+            "source": "s10",
+            "target": "s7",
+            "source_device":"s10",
+            "target_device":"s7",
+            "source-inf": "eno2",
+            "target-inf": "eno3"
+        },
+        {
+            "source": "s10",
+            "target": "s8",
+            "source_device":"s10",
+            "target_device":"s8",
+            "source-inf": "eno3",
+            "target-inf": "enp179s0f0"
+        },
+        {
+            "source": "s14",
+            "target": "s13",
+            "source_device":"s14",
+            "target_device":"s13",
+            "source-inf": "eno4",
+            "target-inf": "eno3"
+        },
+        {
+            "source": "s14",
+            "target": "s12",
+            "source_device":"s14",
+            "target_device":"s12",
+            "source-inf": "eno2",
+            "target-inf": "enp177s0f0"
+        },
+        {
+            "source": "s13",
+            "target": "s15",
+            "source_device":"s13",
+            "target_device":"s15",
+            "source-inf": "enp179s0f1",
+            "target-inf": "eno12419"
+        },
+        {
+            "source": "s13",
+            "target": "s11",
+            "source_device":"s13",
+            "target_device":"s11",
+            "source-inf": "eno2",
+            "target-inf": "eno4"
+        },
+        {
+            "source": "s13",
+            "target": "s6",
+            "source_device":"s13",
+            "target_device":"s6",
+            "source-inf": "eno4",
+            "target-inf": "eno2"
+        },
+        {
+            "source": "s4",
+            "target": "h1",
+            "source_device":"s4",
+            "target_device":"h1",
+            "source-inf": "veth0",
+            "target-inf": "veth1"
+        },
+        {
+            "source": "s5",
+            "target": "h2",
+            "source_device":"s5",
+            "target_device":"h2",
+            "source-inf": "weave",
+            "target-inf": "eth1"
+        },
+        {
+            "source": "s9",
+            "target": "h3",
+            "source_device":"s9",
+            "target_device":"h3",
+            "source-inf": "veth0",
+            "target-inf": "veth1"
+        },
+        {
+            "source": "s10",
+            "target": "h4",
+            "source_device":"s10",
+            "target_device":"h4",
+            "source-inf": "weave",
+            "target-inf": "eth1"
+        },
+        {
+            "source": "s14",
+            "target": "h5",
+            "source_device":"s14",
+            "target_device":"h5",
+            "source-inf": "veth0",
+            "target-inf": "veth1"
+        },
+        {
+            "source": "s15",
+            "target": "h6",
+            "source_device":"s15",
+            "target_device":"h6",
+            "source-inf": "veth0",
+            "target-inf": "veth1"
+        }
+
+    ]
+}
