@@ -17,5 +17,6 @@ from thrift_API.sswitch_thrift_API import SimpleSwitchThriftAPI
 # print(ip)
 # print(port)
 a = SimpleSwitchThriftAPI(thrift_port=9090,thrift_ip="192.168.199.182")
-a.table_add(table_name="MyEgress.swid", action_name="MyEgress.set_swid",
-                                         match_keys=[], action_params=["13"])
+b = a.get_custom_crc_calcs()
+print(type(b))
+print(b)

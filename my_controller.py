@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 # @author: ming
 # @date: 2022/10/10 21:28
-
+from crc import Crc
 from p4runtime_API.utils import UserError
 from thrift_API.sswitch_thrift_API import SimpleSwitchThriftAPI
 from p4runtime_API.sswitch_p4runtime_API import SimpleSwitchP4RuntimeAPI
 from utils.topo_util import load_topo
 
-crc32_polinomial = 0x04C11DB7
+# crc16_ccitt
+crc16_polinomial = 0x1021
 
 
 class MyController:
@@ -19,6 +20,8 @@ class MyController:
         self.p4json_path = p4json_path
         self.switchList = []
         self.hostList = []
+        self.custom_calcs = {}
+        self.hash = Crc(16, crc16_polinomial, True, 0x0000, True, 0x0000)
 
     def getSwitchList(self):
         for node in self.topo.nodes:
@@ -46,6 +49,12 @@ class MyController:
             self.thrift_controllers[p4Switch] = None
             while self.thrift_controllers[p4Switch] is None:
                 self.thrift_controllers[p4Switch] = SimpleSwitchThriftAPI(thrift_ip=thrift_ip, thrift_port=thrift_port)
+
+    def get_custom_calcs(self):
+        # 所有交换机的p4都相同，只获取一个即可
+        swicth = self.switchList[0]
+        thrift_controller = self.thrift_controllers[swicth]
+        self.custom_calcs = thrift_controller.get_custom_crc_calcs()
 
     def genSwitchIdTable(self):
         """
@@ -87,7 +96,7 @@ class MyController:
 
     def tunnel_dst_table(self):
         """
-        利用 p4runtime 下发 隧道终点的表项
+        利用 p4runtime 下发隧道终点的表项
         :return:
         """
         host_mac_dic = self.topo.getHostsMac()
@@ -107,13 +116,19 @@ class MyController:
 
     def config_hash_function(self):
         for p4Switch in self.thrift_controllers.keys():
-            thrift_controller: SimpleSwitchThriftAPI = self.thrift_controllers[p4Switch]
-            thrift_controller.set_crc16_parameters(name="myCRC", final_xor_value=0)
+            for custom_crc16_name, _width in self.custom_calcs:
+                thrift_controller: SimpleSwitchThriftAPI = self.thrift_controllers[p4Switch]
+                thrift_controller.set_crc16_parameters(name=custom_crc16_name, polynomial=crc16_polinomial,
+                                                       initial_remainder=0x0000,
+                                                       final_xor_value=0x0000, reflect_data=True,
+                                                       reflect_remainder=True)
 
     def main(self):
         self.getSwitchList()
         self.getHostList()
         self.connect_to_switches(self.p4info_path, self.p4json_path)
+        self.get_custom_calcs()
+        self.config_hash_function()
         self.genSwitchIdTable()
         self.clear_ipv4route_table_entry()
         self.simple_ipv4_route()
