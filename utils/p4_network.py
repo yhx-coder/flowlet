@@ -28,6 +28,13 @@ class P4Network(nx.Graph):
                 host_ip_dic[node] = self.nodes[node]["ip"]
         return host_ip_dic
 
+    def getHostsMac(self):
+        host_mac_dic = {}
+        for node in self.nodes:
+            if node[0] == "h":
+                host_mac_dic[node] = self.nodes[node]["mac"]
+        return host_mac_dic
+
     def __name_to_portNum(self):
         node_name_to_portNum = {}
         for node in self.nodes:

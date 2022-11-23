@@ -22,5 +22,13 @@ from utils.p4_network import P4Network
 
 # network.get_shortest_paths_between_nodes()
 
-controller = MyController("my_link_monitor.p4info", "my_link_monitor.json")
-a = controller.simple_ipv4_route()
+# controller = MyController("my_link_monitor.p4info", "my_link_monitor.json")
+# a = controller.simple_ipv4_route()
+a = {"a":None}
+while(a["a"] == None):
+    if(a["a"]):
+        print("hhhhhh")
+    else:
+        print("ooooooo")
+        a["a"] = "ssss"
+print(a["a"])
