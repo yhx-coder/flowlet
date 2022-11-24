@@ -2,13 +2,18 @@
 # @author: ming
 # @date: 2022/10/10 21:28
 from crc import Crc
+from p4runtime_API.bytes_utils import parse_value
 from p4runtime_API.utils import UserError
 from thrift_API.sswitch_thrift_API import SimpleSwitchThriftAPI
 from p4runtime_API.sswitch_p4runtime_API import SimpleSwitchP4RuntimeAPI
 from utils.topo_util import load_topo
+import socket
 
 # crc16_ccitt
 crc16_polinomial = 0x1021
+
+# 最多处理的流数
+FLOWLET_REGISTER_SIZE = 8192
 
 
 class MyController:
@@ -122,6 +127,14 @@ class MyController:
                                                        initial_remainder=0x0000,
                                                        final_xor_value=0x0000, reflect_data=True,
                                                        reflect_remainder=True)
+
+    def cal_tunnel_group(self, hdr_ipv4_srcAddr, hdr_ipv4_dstAddr, hdr_tcp_srcPort, hdr_tcp_dstPort) -> int:
+        srcAddr = socket.inet_aton(hdr_ipv4_srcAddr)
+        dstAddr = socket.inet_aton(hdr_ipv4_dstAddr)
+        sPort = parse_value(hdr_tcp_srcPort, 16)
+        dPort = parse_value(hdr_tcp_dstPort, 16)
+        data = srcAddr + dstAddr + sPort + dPort
+        return self.hash.bit_by_bit_fast(data)
 
     def main(self):
         self.getSwitchList()
