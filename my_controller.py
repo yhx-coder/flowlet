@@ -2,9 +2,8 @@
 # @author: ming
 # @date: 2022/10/10 21:28
 import logging
-import time
 
-from crc import Crc
+from utils.crc import Crc
 from p4runtime_API.bytes_utils import parse_value
 from p4runtime_API.utils import UserError
 from thrift_API.sswitch_thrift_API import SimpleSwitchThriftAPI

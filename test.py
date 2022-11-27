@@ -1,17 +1,10 @@
 # -*- coding: utf-8 -*-
 # @author: ming
 # @date: 2022/10/10 17:36
-import json
 import socket
-import time
 
-import crcmod
-from scapy.layers.inet import IP
-
-from crc import Crc
+from utils.crc import Crc
 from p4runtime_API.bytes_utils import parse_value
-from p4runtime_API.sswitch_p4runtime_API import SimpleSwitchP4RuntimeAPI
-from thrift_API.sswitch_thrift_API import SimpleSwitchThriftAPI
 
 # a = SimpleSwitchP4RuntimeAPI(device_id=13, grpc_addr="192.168.199.182:50091",
 #                              p4rt_path="my_link_monitor.p4info", json_path="my_link_monitor.json")
