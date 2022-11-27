@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # @author: ming
 # @date: 2022/10/10 21:28
+import logging
+import time
+
 from crc import Crc
 from p4runtime_API.bytes_utils import parse_value
 from p4runtime_API.utils import UserError
@@ -27,6 +30,21 @@ class MyController:
         self.hostList = []
         self.custom_calcs = {}
         self.hash = Crc(16, crc16_polinomial, True, 0x0000, True, 0x0000)
+        # 要通过p4runtime下发的表
+        self.switch_p4runtime_table = {}
+        # 要通过thrift下发的表
+        self.switch_thrift_table = {}
+        self.logger = self.config_log()
+
+    def config_log(self):
+        logger = logging.getLogger("controller")
+        logger.setLevel(logging.WARNING)
+        handler = logging.FileHandler(filename="controller_log.txt", encoding="utf8")
+        handler.setLevel(logging.WARNING)
+        format_str = logging.Formatter("%(asctime)s - %(pathname)s[line:%(lineno)d] - %(message)s")
+        handler.setFormatter(format_str)
+        logger.addHandler(handler)
+        return logger
 
     def getSwitchList(self):
         for node in self.topo.nodes:
@@ -70,8 +88,10 @@ class MyController:
             device_id = self.topo.nodes[p4Switch]["device_id"]
             device_id = str(device_id)
             thrift_controller = self.thrift_controllers[p4Switch]
-            thrift_controller.table_add(table_name="MyEgress.swid", action_name="MyEgress.set_swid",
-                                        match_keys=[], action_params=[device_id])
+            result = thrift_controller.table_add(table_name="MyEgress.swid", action_name="MyEgress.set_swid",
+                                                 match_keys=[], action_params=[device_id])
+            if not result:
+                self.logger.error("Manually check: MyEgress.swid MyEgress.set_swid => %s", device_id)
 
     def simple_ipv4_route(self):
         host_ip_dic = self.topo.getHost()
@@ -88,9 +108,17 @@ class MyController:
                         next_hop_sw_mac = self.topo.node_to_node_mac(next_hop_sw_name, sw_name)[0]
                         next_hop_port = self.topo.node_to_node_port_num(sw_name, next_hop_sw_name)[0]
                         if sw_name in switch_controller:
-                            self.controllers[sw_name].table_add("ipv4_lpm", "ipv4_forward", [dst_ip], [next_hop_sw_mac])
-                            self.controllers[sw_name].table_add("l2_exact_table", "set_egress_port", [next_hop_sw_mac],
-                                                                [next_hop_port])
+                            result1 = self.controllers[sw_name].table_add("ipv4_lpm", "ipv4_forward", [dst_ip],
+                                                                          [next_hop_sw_mac])
+                            result2 = self.controllers[sw_name].table_add("l2_exact_table", "set_egress_port",
+                                                                          [next_hop_sw_mac],
+                                                                          [next_hop_port])
+                            if not result1:
+                                self.logger.error("Manually check: table_add ipv4_lpm ipv4_forward %s => %s", dst_ip,
+                                                  next_hop_sw_mac)
+                            if not result2:
+                                self.logger.error("Manually check: table_add l2_exact_table set_egress_port %s => %s",
+                                                  next_hop_sw_mac, next_hop_port)
                         else:
                             raise UserError("{} is not connected to the controller!".format(sw_name))
 
@@ -98,6 +126,35 @@ class MyController:
         for sw, _controller in self.controllers.items():
             _controller.table_clear("ipv4_lpm")
             _controller.table_clear("l2_exact_table")
+
+    def init(self):
+        self.getSwitchList()
+        self.getHostList()
+        # 连接控制器
+        self.connect_to_switches(self.p4info_path, self.p4json_path)
+        # 交换机状态初始化
+        self.reset()
+        # 配置控制面和数据面的hash函数
+        self.hash_config()
+        # 设置交换机ID
+        self.tele_config()
+        # 配置背景流量的路由表
+        self.background_flow_config()
+
+    def reset(self):
+        for sw in self.switchList:
+            thrift_controller: SimpleSwitchThriftAPI = self.thrift_controllers[sw]
+            thrift_controller.reset_state()
+
+    def hash_config(self):
+        self.get_custom_calcs()
+        self.config_hash_function()
+
+    def tele_config(self):
+        self.genSwitchIdTable()
+
+    def background_flow_config(self):
+        self.simple_ipv4_route()
 
     def tunnel_dst_table(self):
         """
@@ -108,7 +165,9 @@ class MyController:
         host_mac_list = list(host_mac_dic.values())
         for p4Switch in self.switchList:
             _controller: SimpleSwitchP4RuntimeAPI = self.controllers[p4Switch]
-            _controller.table_add("tunnel_dst", "remove_tunnel_header", host_mac_list, [])
+            result = _controller.table_add("tunnel_dst", "remove_tunnel_header", host_mac_list, [])
+            if not result:
+                self.logger.error("Manually check: tunnel_dst remove_tunnel_header %s", host_mac_list)
 
     def check_compute_task_table(self):
         """
@@ -117,7 +176,9 @@ class MyController:
         """
         for p4Switch in self.switchList:
             _controller: SimpleSwitchP4RuntimeAPI = self.controllers[p4Switch]
-            _controller.table_add("check_compute_task", "NoAction", ["6999"], [])
+            result = _controller.table_add("check_compute_task", "NoAction", ["6999"], [])
+            if not result:
+                self.logger.error("Manually check: check_compute_task NoAction 6999")
 
     def config_hash_function(self):
         for p4Switch in self.thrift_controllers.keys():
@@ -134,17 +195,10 @@ class MyController:
         sPort = parse_value(hdr_tcp_srcPort, 16)
         dPort = parse_value(hdr_tcp_dstPort, 16)
         data = srcAddr + dstAddr + sPort + dPort
-        return self.hash.bit_by_bit_fast(data)
+        return self.hash.bit_by_bit_fast(data) % FLOWLET_REGISTER_SIZE
 
     def main(self):
-        self.getSwitchList()
-        self.getHostList()
-        self.connect_to_switches(self.p4info_path, self.p4json_path)
-        self.get_custom_calcs()
-        self.config_hash_function()
-        self.genSwitchIdTable()
-        self.clear_ipv4route_table_entry()
-        self.simple_ipv4_route()
+        self.init()
 
 
 if __name__ == "__main__":
