@@ -2,6 +2,7 @@
 # @author: ming
 # @date: 2022/10/10 17:36
 import socket
+import struct
 
 from utils.crc import Crc
 from p4runtime_API.bytes_utils import parse_value
@@ -33,16 +34,33 @@ from p4runtime_API.bytes_utils import parse_value
 
 
 # start = time.time_ns()
-a = Crc(16, 0x1021, True, 0x0000, True, 0x0000)
+# a = Crc(16, 0x1021, True, 0x0000, True, 0x0000)
 # a = crcmod.mkCrcFun(0x11021,0x0000,True,0x0000)
-b = parse_value("80",16)
-d = parse_value("80",16)
-e = socket.inet_aton("192.168.199.210")
-f = socket.inet_aton("192.168.199.102")
-g = e+f+b+d
-c = a.bit_by_bit_fast(g) % 8192
+# b = parse_value("80",16)
+# d = parse_value("80",16)
+# e = socket.inet_aton("192.168.199.210")
+# f = socket.inet_aton("192.168.199.102")
+# g = e+f+b+d
+# c = a.bit_by_bit_fast(g) % 8192
 # c = a(g)% 8192
-print(type(c))
+# print(type(c))
 # end = time.time_ns()
 # 8160
 # print(end - start)
+# int_ip = 123456789
+# a = socket.inet_ntoa(struct.pack("I",socket.htonl(int_ip)))
+# print(a)
+
+# path = [1,2,3]
+# total = 0
+# boundary = []
+# boundary.append(0)
+# for i in path:
+#     total+=i
+#     boundary.append(total)
+# print(boundary)
+# a = str(1234)
+# print(a)
+if not None:
+    print("aaaaa")
+
