@@ -61,6 +61,11 @@ from p4runtime_API.bytes_utils import parse_value
 # print(boundary)
 # a = str(1234)
 # print(a)
-if not None:
-    print("aaaaa")
-
+# if not None:
+#     print("aaaaa")
+# a = None
+# b = max(0.12,a)
+# print(b)
+s1_bandwidth_result = (1,)
+s1_bandwidth = 0 if s1_bandwidth_result is None else s1_bandwidth_result[0]
+print(s1_bandwidth)
