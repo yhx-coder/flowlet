@@ -10,6 +10,7 @@ from p4runtime_API.utils import UserError
 from thrift_API.sswitch_thrift_API import SimpleSwitchThriftAPI
 from p4runtime_API.sswitch_p4runtime_API import SimpleSwitchP4RuntimeAPI
 from utils.topo_util import load_topo
+from utils.dbHelper import DbHelper
 import socket
 
 # crc16_ccitt
@@ -35,6 +36,8 @@ class MyController:
         # 要通过thrift下发的表
         self.switch_thrift_table = {}
         self.logger = self.config_log()
+        self.dbHelper = DbHelper(host="192.168.199.102", port=3306, user="root", password="mysql", database="cfint",
+                                 charset='utf8')
 
     def config_log(self):
         logger = logging.getLogger("controller")
@@ -225,6 +228,7 @@ class MyController:
                 if not result1:
                     self.logger.error("Manually check: table_add tunnel_src add_tunnel_header %s => %s",
                                       str(tunnel_group), str(total_weight))
+                result2 = self.p4runtime_controllers[sw].table_add()
 
     def config_digest(self):
         for sw in self.switchList:
@@ -256,6 +260,40 @@ class MyController:
                 p4runtime_controller: SimpleSwitchP4RuntimeAPI = self.p4runtime_controllers[sw]
                 dig_list = p4runtime_controller.get_digest_list()
                 self.recv_msg_digest(dig_list)
+
+    def get_path_bandwidth(self, path, tele_round):
+        """
+        返回对应遥测轮次的链路已用带宽
+        :param path: 例如 [h1 s1 s3 s4 h3]
+        :param tele_round: 遥测轮次，字符串类型
+        :return:
+        """
+        path_bandwidth = 0
+        for i in range(1, len(path) - 2):
+            link_bandwidth = self.dbHelper.get_link_bandwidth(path[i], path[i + 1], tele_round)
+            path_bandwidth = max(link_bandwidth, path_bandwidth)
+        return path_bandwidth
+
+    def get_path_latency(self, path, tele_round):
+        """
+        获取链路时延
+        :param path: 例如 [h1 s1 s3 s4 h3]
+        :param tele_round: 遥测轮次，字符串类型
+        :return:
+        """
+        path_lantency = 0
+        for i in range(1, len(path) - 2):
+            link_latency = self.dbHelper.get_link_latency(path[i], path[i + 1], tele_round)
+            path_lantency += link_latency
+        return path_lantency
+
+    def get_topo_stat_snap(self):
+        tele_round = self.dbHelper.get_valid_max_tele_round()
+        if tele_round == -1:
+            print("遥测还未完成，请等待后重试")
+            return -1
+        else:
+            return tele_round
 
     def main(self):
         self.init()
