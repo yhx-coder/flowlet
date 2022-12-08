@@ -195,17 +195,27 @@ class DbHelper:
         else:
             return -1
 
-    def get_valid_tele_round(self):
+    def get_valid_tele_round(self, num=-1):
         """
-        获取所有有效的轮次
+        获取num个有效的轮次；当num=-1时获取所有有效伦次
         :return:
         """
-        sql = "SELECT telemetryRounds from topo_state GROUP BY telemetryRounds " \
-              "HAVING COUNT(DISTINCT packetId)=20 ORDER BY CAST(telemetryRounds as UNSIGNED) DESC"
-        results = self.select_all_simple(sql)
         round_list = []
-        if len(results) != 0:
-            for result in results:
-                round_list.append(result[0])
-        else:
-            return round_list
+        if num == -1:
+            sql = "SELECT telemetryRounds from topo_state GROUP BY telemetryRounds " \
+                  "HAVING COUNT(DISTINCT packetId)=20 ORDER BY CAST(telemetryRounds as UNSIGNED) DESC"
+            results = self.select_all_simple(sql)
+            if len(results) != 0:
+                for result in results:
+                    round_list.append(result[0])
+            else:
+                return round_list
+        if num > 0:
+            sql = "SELECT telemetryRounds from topo_state GROUP BY telemetryRounds " \
+                  "HAVING COUNT(DISTINCT packetId)=20 ORDER BY CAST(telemetryRounds as UNSIGNED) DESC limit %s"
+            results = self.select_all(sql, (num,))
+            if len(results) != 0:
+                for result in results:
+                    round_list.append(result[0])
+            else:
+                return round_list
