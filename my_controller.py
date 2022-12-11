@@ -235,7 +235,6 @@ class MyController:
         # path1 :: h1 s1 s6 s9 h3
         return []
 
-
     def gen_tunnel_table(self, flow_args):
         for flow_arg in flow_args:
             srcIP_str = flow_arg[0]
@@ -339,11 +338,10 @@ class MyController:
     def main(self):
         self.init()
 
+
 if __name__ == "__main__":
     message_queue = queue.Queue(100)
 
     controller = MyController("my_link_monitor.p4info", "my_link_monitor.json")
     # controller = MyController("my_link_monitor_performance.p4info", "my_link_monitor_performance.json")
     controller.main()
-
-
