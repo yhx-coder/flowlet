@@ -235,10 +235,6 @@ class MyController:
         # path1 :: h1 s1 s6 s9 h3
         return []
 
-    def request_multipath_route(self):
-        global message_queue
-        data = message_queue.get()
-        # 解析data，获取网络需求及流信息，生成多路径
 
     def gen_tunnel_table(self, flow_args):
         for flow_arg in flow_args:
@@ -343,24 +339,6 @@ class MyController:
     def main(self):
         self.init()
 
-
-class UserRequestHandler(socketserver.BaseRequestHandler):
-    def handle(self) -> None:
-        global message_queue
-        # 接收消息获取带宽及计算资源及流信息
-        # data :: srcIP,srcPort,requestBandwidth,computeResource
-        data = self.request[0].decode('utf8')
-        # 获取满足需求的目的地
-        msg = "ip"
-        message_queue.put(data + msg)
-        self.request[1].sendto(msg.encode('utf8'), self.client_address)
-
-
-def start_user_request_server():
-    udp_server = socketserver.ThreadingUDPServer(("192.168.199.13", 9999), UserRequestHandler)
-    udp_server.serve_forever()
-
-
 if __name__ == "__main__":
     message_queue = queue.Queue(100)
 
@@ -368,5 +346,4 @@ if __name__ == "__main__":
     # controller = MyController("my_link_monitor_performance.p4info", "my_link_monitor_performance.json")
     controller.main()
 
-    user_request_server = threading.Thread(name="user_request_server", target=start_user_request_server)
-    user_request_server.start()
+
