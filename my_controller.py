@@ -230,7 +230,7 @@ class MyController:
             mac_dic[path[i]] = next_hop_sw_mac
         return mac_dic
 
-    def multipath_route(self, srcIP_str, dstIP_str):
+    def multipath_route(self, srcIP_str, dstIP_str, expect_bandwidth):
         # return [(path1,weight),(path2,weight),...]
         # path1 :: h1 s1 s6 s9 h3
         return []
@@ -241,8 +241,9 @@ class MyController:
             dstIP_str = flow_arg[1]
             srcPort = flow_arg[2]
             dstPort = flow_arg[3]
+            expect_bandwidth = flow_arg[4]
             tunnel_group = self.cal_tunnel_group(srcIP_str, dstIP_str, srcPort, dstPort)
-            path_list = self.multipath_route(srcIP_str, dstIP_str)
+            path_list = self.multipath_route(srcIP_str, dstIP_str, expect_bandwidth)
             path_boundary = [0]
             total_weight = 0
             for path in path_list:
@@ -283,9 +284,10 @@ class MyController:
             dstIP = int.from_bytes(dig.struct.members[1].bitstring, byteorder='big')
             srcPort = int.from_bytes(dig.struct.members[2].bitstring, byteorder='big')
             dstPort = int.from_bytes(dig.struct.members[3].bitstring, byteorder='big')
+            expect_bandwidth = int.from_bytes(dig.struct.members[4].bitstring, byteorder='big')
             srcIP_str = socket.inet_ntoa(struct.pack("I", socket.htonl(srcIP)))
             dstIP_str = socket.inet_ntoa(struct.pack("I", socket.htonl(dstIP)))
-            flow_args.append((srcIP_str, dstIP_str, srcPort, dstPort))
+            flow_args.append((srcIP_str, dstIP_str, srcPort, dstPort, expect_bandwidth))
         return flow_args
 
     def recv_msg_digest(self, dig_list):
