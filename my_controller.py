@@ -2,7 +2,10 @@
 # @author: ming
 # @date: 2022/10/10 21:28
 import logging
+import queue
+import socketserver
 import struct
+import threading
 
 from utils.crc import Crc
 from p4runtime_API.bytes_utils import parse_value
@@ -44,7 +47,7 @@ class MyController:
         logger.setLevel(logging.WARNING)
         handler = logging.FileHandler(filename="controller_log.txt", encoding="utf8")
         handler.setLevel(logging.WARNING)
-        format_str = logging.Formatter("%(asctime)s - %(pathname)s[line:%(lineno)d] - %(message)s")
+        format_str = logging.Formatter("%(asctime)s- %(threadName)s - %(pathname)s[line:%(lineno)d] - %(message)s")
         handler.setFormatter(format_str)
         logger.addHandler(handler)
         return logger
@@ -109,20 +112,20 @@ class MyController:
                         dst_ip = host_ip_dic[dst]
                         next_hop_sw_name = path[i + 1]
                         next_hop_sw_mac = self.topo.node_to_node_mac(next_hop_sw_name, sw_name)[0]
-                        next_hop_port = self.topo.node_to_node_port_num(sw_name, next_hop_sw_name)[0]
+                        # next_hop_port = self.topo.node_to_node_port_num(sw_name, next_hop_sw_name)[0]
                         if sw_name in switch_controller:
                             result1 = self.p4runtime_controllers[sw_name].table_add("ipv4_lpm", "ipv4_forward",
                                                                                     [dst_ip],
                                                                                     [next_hop_sw_mac])
-                            result2 = self.p4runtime_controllers[sw_name].table_add("l2_exact_table", "set_egress_port",
-                                                                                    [next_hop_sw_mac],
-                                                                                    [next_hop_port])
+                            # result2 = self.p4runtime_controllers[sw_name].table_add("l2_exact_table", "set_egress_port",
+                            #                                                         [next_hop_sw_mac],
+                            #                                                         [next_hop_port])
                             if not result1:
                                 self.logger.error("Manually check: table_add ipv4_lpm ipv4_forward %s => %s", dst_ip,
                                                   next_hop_sw_mac)
-                            if not result2:
-                                self.logger.error("Manually check: table_add l2_exact_table set_egress_port %s => %s",
-                                                  next_hop_sw_mac, next_hop_port)
+                            # if not result2:
+                            #     self.logger.error("Manually check: table_add l2_exact_table set_egress_port %s => %s",
+                            #                       next_hop_sw_mac, next_hop_port)
                         else:
                             raise UserError("{} is not connected to the controller!".format(sw_name))
 
@@ -142,6 +145,8 @@ class MyController:
         self.hash_config()
         # 设置交换机ID
         self.tele_config()
+        # 设置二层转发表
+        self.gen_l2_exact_table()
         # 配置背景流量的路由表
         self.background_flow_config()
 
@@ -173,7 +178,7 @@ class MyController:
             _controller: SimpleSwitchP4RuntimeAPI = self.p4runtime_controllers[p4Switch]
             result = _controller.table_add("tunnel_dst", "remove_tunnel_header", host_mac_list, [])
             if not result:
-                self.logger.error("Manually check: tunnel_dst remove_tunnel_header %s", host_mac_list)
+                self.logger.error("Manually check: table_add tunnel_dst remove_tunnel_header %s", host_mac_list)
 
     def check_compute_task_table(self):
         """
@@ -184,7 +189,7 @@ class MyController:
             _controller: SimpleSwitchP4RuntimeAPI = self.p4runtime_controllers[p4Switch]
             result = _controller.table_add("check_compute_task", "send_digest", ["6999"], [])
             if not result:
-                self.logger.error("Manually check: check_compute_task send_digest 6999")
+                self.logger.error("Manually check: table_add check_compute_task send_digest 6999")
 
     def config_hash_function(self):
         for p4Switch in self.thrift_controllers.keys():
@@ -203,9 +208,37 @@ class MyController:
         data = srcAddr + dstAddr + sPort + dPort
         return self.hash.bit_by_bit_fast(data) % FLOWLET_REGISTER_SIZE
 
+    def gen_l2_exact_table(self):
+        for sw in self.switchList:
+            sw_neighbor_list = list(self.topo.adj[sw])
+            for neighbor in sw_neighbor_list:
+                neighbor_mac = self.topo.node_to_node_mac(neighbor, sw)[0]
+                sw_port = self.topo.node_to_node_port_num(sw, neighbor)[0]
+                result = self.p4runtime_controllers[sw].table_add("l2_exact_table", "set_egress_port",
+                                                                  [neighbor_mac],
+                                                                  [sw_port])
+                if not result:
+                    self.logger.error("Manually check: table_add l2_exact_table set_egress_port %s => %s", neighbor_mac,
+                                      sw_port)
+
+    def path_to_dstMAC(self, path):
+        # path1 :: h1 s1 s6 s9 h3
+        # s1 出 mac,s6 出 mac,s9 出 mac
+        mac_dic = {}
+        for i in range(1, len(path) - 1):
+            next_hop_sw_mac = self.topo.node_to_node_mac(path[i + 1], path[i])[0]
+            mac_dic[path[i]] = next_hop_sw_mac
+        return mac_dic
+
     def multipath_route(self, srcIP_str, dstIP_str):
         # return [(path1,weight),(path2,weight),...]
+        # path1 :: h1 s1 s6 s9 h3
         return []
+
+    def request_multipath_route(self):
+        global message_queue
+        data = message_queue.get()
+        # 解析data，获取网络需求及流信息，生成多路径
 
     def gen_tunnel_table(self, flow_args):
         for flow_arg in flow_args:
@@ -220,7 +253,7 @@ class MyController:
             for path in path_list:
                 total_weight += path[1]
                 path_boundary.append(total_weight)
-            # 先下发tunnel_src表，以后和路由表合并下发
+
             for sw in self.switchList:
                 result1 = self.p4runtime_controllers[sw].table_add("tunnel_src", "add_tunnel_header",
                                                                    [str(tunnel_group)],
@@ -228,7 +261,19 @@ class MyController:
                 if not result1:
                     self.logger.error("Manually check: table_add tunnel_src add_tunnel_header %s => %s",
                                       str(tunnel_group), str(total_weight))
-                result2 = self.p4runtime_controllers[sw].table_add()
+
+            for i in range(len(path_boundary) - 1):
+                cur_path = path_list[i]
+                tunnelId_range = str(path_boundary[i]) + ".." + str(path_boundary[i + 1] - 1)
+
+                mac_dic = self.path_to_dstMAC(cur_path)
+                for sw in mac_dic.keys():
+                    result2 = self.p4runtime_controllers[sw].table_add("myTunnel_group_to_nhop", "tunnel_forward",
+                                                                       [str(tunnel_group), tunnelId_range],
+                                                                       [mac_dic[sw]])
+                    if not result2:
+                        self.logger.error("Manually check: table_add myTunnel_group_to_nhop tunnel_forward %s %s => %s",
+                                          str(tunnel_group), tunnelId_range, mac_dic[sw])
 
     def config_digest(self):
         for sw in self.switchList:
@@ -299,7 +344,29 @@ class MyController:
         self.init()
 
 
+class UserRequestHandler(socketserver.BaseRequestHandler):
+    def handle(self) -> None:
+        global message_queue
+        # 接收消息获取带宽及计算资源及流信息
+        # data :: srcIP,srcPort,requestBandwidth,computeResource
+        data = self.request[0].decode('utf8')
+        # 获取满足需求的目的地
+        msg = "ip"
+        message_queue.put(data + msg)
+        self.request[1].sendto(msg.encode('utf8'), self.client_address)
+
+
+def start_user_request_server():
+    udp_server = socketserver.ThreadingUDPServer(("192.168.199.13", 9999), UserRequestHandler)
+    udp_server.serve_forever()
+
+
 if __name__ == "__main__":
+    message_queue = queue.Queue(100)
+
     controller = MyController("my_link_monitor.p4info", "my_link_monitor.json")
     # controller = MyController("my_link_monitor_performance.p4info", "my_link_monitor_performance.json")
     controller.main()
+
+    user_request_server = threading.Thread(name="user_request_server", target=start_user_request_server)
+    user_request_server.start()
