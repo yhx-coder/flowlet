@@ -15,7 +15,7 @@ def load_topo(json_path):
         json_path (string): path of the JSON file to load
 
     Returns:
-        p4utils.utils.topology.NetworkGraph: the topology graph.
+        the topology graph.
     """
     with open(json_path, 'r') as f:
         graph_dict = json.load(f)
