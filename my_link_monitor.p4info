@@ -1,0 +1,395 @@
+pkg_info {
+  arch: "v1model"
+}
+tables {
+  preamble {
+    id: 38155214
+    name: "MyIngress.check_compute_task"
+    alias: "check_compute_task"
+  }
+  match_fields {
+    id: 1
+    name: "hdr.tcp.dstPort"
+    bitwidth: 16
+    match_type: EXACT
+  }
+  action_refs {
+    id: 23592486
+  }
+  action_refs {
+    id: 21257015
+  }
+  size: 1024
+}
+tables {
+  preamble {
+    id: 45250849
+    name: "MyIngress.tunnel_src"
+    alias: "tunnel_src"
+  }
+  match_fields {
+    id: 1
+    name: "meta.flowlet_register_index"
+    bitwidth: 16
+    match_type: EXACT
+  }
+  action_refs {
+    id: 21239689
+  }
+  action_refs {
+    id: 21257015
+  }
+  size: 1024
+}
+tables {
+  preamble {
+    id: 40364538
+    name: "MyIngress.myTunnel_group_to_nhop"
+    alias: "myTunnel_group_to_nhop"
+  }
+  match_fields {
+    id: 1
+    name: "hdr.myTunnel.tunnelGroup"
+    bitwidth: 16
+    match_type: EXACT
+  }
+  match_fields {
+    id: 2
+    name: "hdr.myTunnel.tunnelId"
+    bitwidth: 16
+    match_type: RANGE
+  }
+  action_refs {
+    id: 29578228
+  }
+  action_refs {
+    id: 25652968
+  }
+  size: 1024
+}
+tables {
+  preamble {
+    id: 37375156
+    name: "MyIngress.ipv4_lpm"
+    alias: "ipv4_lpm"
+  }
+  match_fields {
+    id: 1
+    name: "hdr.ipv4.dstAddr"
+    bitwidth: 32
+    match_type: LPM
+  }
+  action_refs {
+    id: 28792405
+  }
+  action_refs {
+    id: 25652968
+  }
+  action_refs {
+    id: 21257015
+  }
+  size: 1024
+}
+tables {
+  preamble {
+    id: 37100388
+    name: "MyIngress.l2_exact_table"
+    alias: "l2_exact_table"
+  }
+  match_fields {
+    id: 1
+    name: "hdr.ethernet.dstAddr"
+    bitwidth: 48
+    match_type: EXACT
+  }
+  action_refs {
+    id: 27787745
+  }
+  action_refs {
+    id: 25652968
+  }
+  action_refs {
+    id: 21257015
+  }
+  size: 1024
+}
+tables {
+  preamble {
+    id: 46829915
+    name: "MyEgress.swid"
+    alias: "swid"
+  }
+  action_refs {
+    id: 27556166
+  }
+  action_refs {
+    id: 21257015
+  }
+  size: 1024
+}
+tables {
+  preamble {
+    id: 35030157
+    name: "MyEgress.tunnel_dst"
+    alias: "tunnel_dst"
+  }
+  match_fields {
+    id: 1
+    name: "hdr.ethernet.dstAddr"
+    bitwidth: 48
+    match_type: EXACT
+  }
+  action_refs {
+    id: 21364572
+  }
+  action_refs {
+    id: 21257015
+  }
+  size: 1024
+}
+actions {
+  preamble {
+    id: 21257015
+    name: "NoAction"
+    alias: "NoAction"
+    annotations: "@noWarn(\"unused\")"
+  }
+}
+actions {
+  preamble {
+    id: 25652968
+    name: "MyIngress.drop"
+    alias: "drop"
+  }
+}
+actions {
+  preamble {
+    id: 28792405
+    name: "MyIngress.ipv4_forward"
+    alias: "ipv4_forward"
+  }
+  params {
+    id: 1
+    name: "dstAddr"
+    bitwidth: 48
+  }
+}
+actions {
+  preamble {
+    id: 26904258
+    name: "MyIngress.srcRoute_nhop"
+    alias: "srcRoute_nhop"
+  }
+}
+actions {
+  preamble {
+    id: 18485362
+    name: "MyIngress.srcRoute_finish"
+    alias: "srcRoute_finish"
+  }
+}
+actions {
+  preamble {
+    id: 27787745
+    name: "MyIngress.set_egress_port"
+    alias: "set_egress_port"
+  }
+  params {
+    id: 1
+    name: "port_num"
+    bitwidth: 9
+  }
+}
+actions {
+  preamble {
+    id: 29710393
+    name: "MyIngress.read_flowlet_registers"
+    alias: "read_flowlet_registers"
+  }
+}
+actions {
+  preamble {
+    id: 22031496
+    name: "MyIngress.update_flowlet_id"
+    alias: "update_flowlet_id"
+  }
+}
+actions {
+  preamble {
+    id: 23592486
+    name: "MyIngress.send_digest"
+    alias: "send_digest"
+  }
+}
+actions {
+  preamble {
+    id: 21239689
+    name: "MyIngress.add_tunnel_header"
+    alias: "add_tunnel_header"
+  }
+  params {
+    id: 1
+    name: "total_path_num"
+    bitwidth: 16
+  }
+}
+actions {
+  preamble {
+    id: 29578228
+    name: "MyIngress.tunnel_forward"
+    alias: "tunnel_forward"
+  }
+  params {
+    id: 1
+    name: "dstAddr"
+    bitwidth: 48
+  }
+}
+actions {
+  preamble {
+    id: 27556166
+    name: "MyEgress.set_swid"
+    alias: "set_swid"
+  }
+  params {
+    id: 1
+    name: "swid"
+    bitwidth: 10
+  }
+}
+actions {
+  preamble {
+    id: 21364572
+    name: "MyEgress.remove_tunnel_header"
+    alias: "remove_tunnel_header"
+  }
+}
+registers {
+  preamble {
+    id: 370266519
+    name: "MyIngress.flowlet_to_id"
+    alias: "flowlet_to_id"
+  }
+  type_spec {
+    bitstring {
+      bit {
+        bitwidth: 16
+      }
+    }
+  }
+  size: 8192
+}
+registers {
+  preamble {
+    id: 385618189
+    name: "MyIngress.flowlet_time_stamp"
+    alias: "flowlet_time_stamp"
+  }
+  type_spec {
+    bitstring {
+      bit {
+        bitwidth: 48
+      }
+    }
+  }
+  size: 8192
+}
+registers {
+  preamble {
+    id: 384128831
+    name: "MyEgress.byte_cnt_reg"
+    alias: "byte_cnt_reg"
+  }
+  type_spec {
+    bitstring {
+      bit {
+        bitwidth: 32
+      }
+    }
+  }
+  size: 8
+}
+registers {
+  preamble {
+    id: 383418656
+    name: "MyEgress.last_time_reg"
+    alias: "last_time_reg"
+  }
+  type_spec {
+    bitstring {
+      bit {
+        bitwidth: 48
+      }
+    }
+  }
+  size: 8
+}
+digests {
+  preamble {
+    id: 396008848
+    name: "flow_arg_t"
+    alias: "flow_arg_t"
+  }
+  type_spec {
+    struct {
+      name: "flow_arg_t"
+    }
+  }
+}
+type_info {
+  structs {
+    key: "flow_arg_t"
+    value {
+      members {
+        name: "srcAddr"
+        type_spec {
+          bitstring {
+            bit {
+              bitwidth: 32
+            }
+          }
+        }
+      }
+      members {
+        name: "dstAddr"
+        type_spec {
+          bitstring {
+            bit {
+              bitwidth: 32
+            }
+          }
+        }
+      }
+      members {
+        name: "srcPort"
+        type_spec {
+          bitstring {
+            bit {
+              bitwidth: 16
+            }
+          }
+        }
+      }
+      members {
+        name: "dstPort"
+        type_spec {
+          bitstring {
+            bit {
+              bitwidth: 16
+            }
+          }
+        }
+      }
+      members {
+        name: "expect_bandwidth"
+        type_spec {
+          bitstring {
+            bit {
+              bitwidth: 32
+            }
+          }
+        }
+      }
+    }
+  }
+}
