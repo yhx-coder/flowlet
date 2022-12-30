@@ -3,7 +3,7 @@
 # @date: 2022/10/10 17:36
 import socket
 import struct
-
+import networkx as nx
 from utils.crc import Crc
 from p4runtime_API.bytes_utils import parse_value
 
@@ -66,6 +66,20 @@ from p4runtime_API.bytes_utils import parse_value
 # a = None
 # b = max(0.12,a)
 # print(b)
-s1_bandwidth_result = (1,)
-s1_bandwidth = 0 if s1_bandwidth_result is None else s1_bandwidth_result[0]
-print(s1_bandwidth)
+# s1_bandwidth_result = (1,)
+# s1_bandwidth = 0 if s1_bandwidth_result is None else s1_bandwidth_result[0]
+# print(s1_bandwidth)
+G = nx.Graph()
+G.add_edge("x", "a", capacity=3.0)
+G.add_edge("x", "b", capacity=1.0)
+G.add_edge("a", "c", capacity=3.0)
+G.add_edge("b", "c", capacity=5.0)
+G.add_edge("b", "d", capacity=4.0)
+G.add_edge("d", "e", capacity=2.0)
+G.add_edge("c", "y", capacity=2.0)
+G.add_edge("e", "y", capacity=3.0)
+flow_value, flow_dict = nx.maximum_flow(G, "x", "y")
+a = []
+
+
+

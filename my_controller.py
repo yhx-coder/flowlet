@@ -3,9 +3,9 @@
 # @date: 2022/10/10 21:28
 import logging
 import queue
-import socketserver
 import struct
-import threading
+
+import networkx
 
 from utils.crc import Crc
 from p4runtime_API.bytes_utils import parse_value
@@ -230,10 +230,45 @@ class MyController:
             mac_dic[path[i]] = next_hop_sw_mac
         return mac_dic
 
+    def update_topo_state(self, max_capacity):
+        tele_round = self.get_newest_tele_round()
+        switch_topo = self.topo.subgraph(self.switchList)
+        for edge in switch_topo.edges:
+            capacity = max_capacity - self.dbHelper.get_link_bandwidth(edge[0], edge[1], tele_round)
+            self.topo.add_edge(edge[0], edge[1], capacity=capacity)
+        return switch_topo, tele_round
+
+    def gen_residual_graph(self, topo, path, bandwidth):
+        for i in range(1, len(path) - 2):
+            topo[path[i]][path[i + 1]]["capacity"] = topo[path[i]][path[i + 1]]["capacity"] - bandwidth
+            if topo[path[i]][path[i + 1]]["capacity"] <= 0:
+                topo.remove_edge(path[i], path[i + 1])
+
     def multipath_route(self, srcIP_str, dstIP_str, expect_bandwidth):
         # return [(path1,weight),(path2,weight),...]
         # path1 :: h1 s1 s6 s9 h3
-        return []
+        res = []
+        max_bandwidth = 1000
+        src = self.topo.getHostByIP(srcIP_str)
+        dst = self.topo.getHostByIP(dstIP_str)
+        src_gateway = list(self.topo[src].keys())[0]
+        dst_gateway = list(self.topo[dst].keys())[0]
+        switch_topo, tele_round = self.update_topo_state(max_bandwidth)
+        switch_topo_deep = switch_topo.copy()
+        while expect_bandwidth > 0:
+            try:
+                path_itr = networkx.shortest_simple_paths(switch_topo_deep, src_gateway, dst_gateway)
+                path = next(path_itr)
+                path.insert(0, src)
+                path.append(dst)
+                available_bandwidth = max_bandwidth - self.get_path_bandwidth(path, tele_round)
+                res.append((path, available_bandwidth))
+                expect_bandwidth -= available_bandwidth
+                self.gen_residual_graph(switch_topo_deep, path, available_bandwidth)
+            except networkx.NetworkXNoPath as e:
+                print(str(e))
+                break
+        return res
 
     def gen_tunnel_table(self, flow_args):
         for flow_arg in flow_args:
@@ -329,7 +364,7 @@ class MyController:
             path_lantency += link_latency
         return path_lantency
 
-    def get_topo_stat_snap(self):
+    def get_newest_tele_round(self):
         tele_round = self.dbHelper.get_valid_max_tele_round()
         if tele_round == -1:
             print("遥测还未完成，请等待后重试")

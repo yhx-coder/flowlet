@@ -136,7 +136,7 @@ class DbHelper:
 
     def get_link_bandwidth(self, s1, s2, tele_round):
         """
-        获取提条链路被占用的带宽
+        获取提条链路被占用的带宽 kB/s
         :param s1:
         :param s2:
         :param tele_round:

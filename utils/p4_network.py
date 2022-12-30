@@ -11,22 +11,17 @@ class P4Network(nx.Graph):
         self.node_name_to_mac = self.__name_to_mac()
         self.node_to_neighbor_name_dict = self.__connected_name_dic()
 
-    def getDestination(self):
-        node_to_ip = {}
-        ip_to_port = {}
-        for node in self.nodes:
-            for portId, portInfo in self.nodes[node]["ports"].items():
-                if portInfo['ip']:
-                    node_to_ip[node] = (portInfo["ip"], portInfo["mac"])
-                    ip_to_port[portInfo["ip"]] = portId
-        return node_to_ip, ip_to_port
-
     def getHost(self):
         host_ip_dic = {}
         for node in self.nodes:
             if node[0] == "h":
                 host_ip_dic[node] = self.nodes[node]["ip"]
         return host_ip_dic
+
+    def getHostByIP(self, ipAddr):
+        for node in self.nodes:
+            if node[0] == "h" and self.nodes[node]["ip"] == ipAddr:
+                return node
 
     def getHostsMac(self):
         host_mac_dic = {}
