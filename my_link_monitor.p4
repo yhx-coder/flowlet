@@ -13,7 +13,7 @@ const bit<16> TYPE_IPV4  = 0x800;
 const bit<16> TYPE_PROBE_TRANSIT = 0x812;
 const bit<16> TYPE_PROBE_SINK = 0x813;
 const bit<16> TYPE_MY_TUNNEL = 0X814;
-const bit<16> TYPE_MY_SERVICE = 0X811
+const bit<16> TYPE_MY_SERVICE = 0X811;
 
 
 #define MAX_HOPS 4
